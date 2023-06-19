@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: necrozma <necrozma999@gmail.com>
+Date: Wed, 17 May 2023 14:44:21 -0600
+Subject: [PATCH] Disable attached arrows
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityArrow.java b/src/main/java/net/minecraft/server/EntityArrow.java
+index 111e2bf0c9a6a2f6ea362b24a97187aaf3613649..3035297d7ce223e6d1a4b219d9eea5c07ccad2db 100644
+--- a/src/main/java/net/minecraft/server/EntityArrow.java
++++ b/src/main/java/net/minecraft/server/EntityArrow.java
+@@ -278,10 +278,6 @@ public class EntityArrow extends Entity implements IProjectile {
+                         if (movingobjectposition.entity instanceof EntityLiving) {
+                             EntityLiving entityliving = (EntityLiving) movingobjectposition.entity;
+ 
+-                            if (!this.world.isClientSide) {
+-                                entityliving.o(entityliving.bv() + 1);
+-                            }
+-
+                             if (this.knockbackStrength > 0) {
+                                 f3 = MathHelper.sqrt(this.motX * this.motX + this.motZ * this.motZ);
+                                 if (f3 > 0.0F) {

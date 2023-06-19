@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: necrozma <necrozma999@gmail.com>
+Date: Wed, 17 May 2023 13:16:21 -0600
+Subject: [PATCH] Increase max action distances
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index 23bd5d11f8b909817855f593adc51d3ca5d9f976..3a37e5cfe35adcd608ad36cf8047e94df86fbcf9 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -640,7 +640,7 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
+             double d2 = this.player.locZ - ((double) blockposition.getZ() + 0.5D);
+             double d3 = d0 * d0 + d1 * d1 + d2 * d2;
+ 
+-            if (d3 > 36.0D) {
++            if (false) {
+                 return;
+             } else if (blockposition.getY() >= this.minecraftServer.getMaxBuildHeight()) {
+                 return;
+@@ -775,7 +775,7 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
+             // CraftBukkit start - Check if we can actually do something over this large a distance
+             Location eyeLoc = this.getPlayer().getEyeLocation();
+             double reachDistance = NumberConversions.square(eyeLoc.getX() - blockposition.getX()) + NumberConversions.square(eyeLoc.getY() - blockposition.getY()) + NumberConversions.square(eyeLoc.getZ() - blockposition.getZ());
+-            if (reachDistance > (this.getPlayer().getGameMode() == org.bukkit.GameMode.CREATIVE ? CREATIVE_PLACE_DISTANCE_SQUARED : SURVIVAL_PLACE_DISTANCE_SQUARED)) {
++            if (false) {
+                 return;
+             }
+ 
+@@ -1342,10 +1342,10 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
+         this.player.resetIdleTimer();
+         if (entity != null) {
+             boolean flag = this.player.hasLineOfSight(entity);
+-            double d0 = 36.0D;
++            double d0 = 64.0D;
+ 
+             if (!flag) {
+-                d0 = 9.0D;
++                d0 = 49.0D;
+             }
+ 
+             if (this.player.h(entity) < d0) {

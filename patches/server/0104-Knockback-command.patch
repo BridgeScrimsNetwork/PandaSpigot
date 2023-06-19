@@ -1,0 +1,182 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: necrozma <necrozma999@gmail.com>
+Date: Sun, 28 May 2023 20:20:37 -0600
+Subject: [PATCH] Knockback command
+
+
+diff --git a/src/main/java/com/hpfxd/pandaspigot/command/KnockbackModificationCommand.java b/src/main/java/com/hpfxd/pandaspigot/command/KnockbackModificationCommand.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..523d3ce33b2bac19d12ec43579aa6a6fab0bf5c7
+--- /dev/null
++++ b/src/main/java/com/hpfxd/pandaspigot/command/KnockbackModificationCommand.java
+@@ -0,0 +1,144 @@
++package com.hpfxd.pandaspigot.command;
++
++import com.google.common.collect.ImmutableList;
++import org.bukkit.ChatColor;
++import org.bukkit.command.Command;
++import org.bukkit.command.CommandSender;
++import org.bukkit.util.StringUtil;
++
++import java.util.ArrayList;
++import java.util.List;
++
++import net.minecraft.server.MinecraftServer;
++import net.minecraft.server.WorldServer;
++
++public class KnockbackModificationCommand extends Command {
++
++    private static final List<String> ARGUMENTS = ImmutableList.of("horizontalfriction", "verticalfriction", "horizontal", "vertical", "limit", "extrahorizontal", "extravertical", "show");
++
++    public KnockbackModificationCommand(String name) {
++        super(name);
++        this.description = "Modify the knockback configuration";
++        this.usageMessage = "/knockback " +
++                "<horizontalfriction|verticalfriction|horizontal|vertical|limit|extrahorizontal|extravertical|show> <value>";
++        this.setPermission("bukkit.command.knockback");
++    }
++
++    @Override
++    public boolean execute(CommandSender sender, String currentAlias, String[] args) {
++        if (!testPermission(sender)) {
++            return true;
++        }
++        if (args.length < 1) {
++            sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
++            return true;
++        }
++
++
++        try {
++            switch (args[0].toLowerCase()) {
++                case "horizontalfriction": {
++                    double newVal = parseValue(args);
++                    for (WorldServer world : MinecraftServer.getServer().worlds) {
++						world.pandaSpigotConfig.knockback.frictionHorizontal = newVal;
++					}
++                    updated(sender, "horizontal friction", newVal);
++                    break;
++                }
++                case "verticalfriction": {
++                    double newVal = parseValue(args);
++                    for (WorldServer world : MinecraftServer.getServer().worlds) {
++						world.pandaSpigotConfig.knockback.frictionVertical = newVal;
++					}
++                    updated(sender, "vertical friction", newVal);
++                    break;
++                }
++                case "horizontal": {
++                    double newVal = parseValue(args);
++                    for (WorldServer world : MinecraftServer.getServer().worlds) {
++						world.pandaSpigotConfig.knockback.horizontal = newVal;
++					}
++                    updated(sender, "horizontal knockback", newVal);
++                    break;
++                }
++                case "vertical": {
++                    double newVal = parseValue(args);
++                    for (WorldServer world : MinecraftServer.getServer().worlds) {
++						world.pandaSpigotConfig.knockback.vertical = newVal;
++					}
++                    updated(sender, "vertical knockback", newVal);
++                    break;
++                }
++                case "limit": {
++                    double newVal = parseValue(args);
++                    for (WorldServer world : MinecraftServer.getServer().worlds) {
++						world.pandaSpigotConfig.knockback.verticalLimit = newVal;
++					}
++                    updated(sender, "vertical limit", newVal);
++                    break;
++                }
++                case "extrahorizontal": {
++                    double newVal = parseValue(args);
++                    for (WorldServer world : MinecraftServer.getServer().worlds) {
++						world.pandaSpigotConfig.knockback.extraHorizontal = newVal;
++					}
++                    updated(sender, "horizontal (extra)", newVal);
++                    break;
++                }
++                case "extravertical": {
++                    double newVal = parseValue(args);
++                    for (WorldServer world : MinecraftServer.getServer().worlds) {
++						world.pandaSpigotConfig.knockback.extraVertical = newVal;
++					}
++                    updated(sender, "vertical (extra)", newVal);
++                    break;
++                }
++                case "show":
++                    sender.sendMessage(ChatColor.GOLD + "Knockback Configuration");
++                    sendValue(sender, "Horizontal Friction", MinecraftServer.getServer().worlds.get(0).pandaSpigotConfig.knockback.frictionHorizontal);
++                    sendValue(sender, "Vertical Friction", MinecraftServer.getServer().worlds.get(0).pandaSpigotConfig.knockback.frictionVertical);
++                    sendValue(sender, "Horizontal", MinecraftServer.getServer().worlds.get(0).pandaSpigotConfig.knockback.horizontal);
++                    sendValue(sender, "Vertical", MinecraftServer.getServer().worlds.get(0).pandaSpigotConfig.knockback.vertical);
++                    sendValue(sender, "Limit", MinecraftServer.getServer().worlds.get(0).pandaSpigotConfig.knockback.verticalLimit);
++                    sendValue(sender, "Extra Horizontal", MinecraftServer.getServer().worlds.get(0).pandaSpigotConfig.knockback.extraHorizontal);
++                    sendValue(sender, "Extra Vertical", MinecraftServer.getServer().worlds.get(0).pandaSpigotConfig.knockback.extraVertical);
++                    break;
++                default:
++                    sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
++            }
++        } catch (RuntimeException ex) {
++            sender.sendMessage(ChatColor.RED + ex.getMessage());
++        }
++
++        return true;
++    }
++
++    @Override
++    public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
++        if (args.length == 1) {
++            return StringUtil.copyPartialMatches(args[0], ARGUMENTS, new ArrayList<>(ARGUMENTS.size()));
++        }
++        return ImmutableList.of();
++    }
++
++    private double parseValue(String[] args) {
++        if (args.length != 2)
++            throw new RuntimeException("Please specify a single value to set the option to.");
++
++        try {
++            return Double.parseDouble(args[1]);
++        } catch (NumberFormatException ex) {
++            throw new RuntimeException("Invalid value specified!");
++        }
++    }
++
++    private void updated(CommandSender viewer, String name, double newVal) {
++        viewer.sendMessage(ChatColor.GREEN + "Updated " + ChatColor.GOLD + name + ChatColor.GREEN + " to " +
++                ChatColor.BLUE + newVal);
++    }
++
++    private void sendValue(CommandSender viewer, String name, double value) {
++        viewer.sendMessage(ChatColor.AQUA + ChatColor.BOLD.toString() + name + ChatColor.RESET +
++                ": " + ChatColor.BLUE + value);
++    }
++}
+diff --git a/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotConfig.java b/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotConfig.java
+index ae3cdaca275b1a50c5c37c3dd0021c4bd579d373..c023a389d43921fa53e8dbe5c8c8a5f3e7b3e602 100644
+--- a/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotConfig.java
++++ b/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotConfig.java
+@@ -17,6 +17,10 @@ import java.io.File;
+ import java.util.HashMap;
+ import java.util.Map;
+ 
++import com.hpfxd.pandaspigot.command.KnockbackModificationCommand;
++import org.bukkit.command.SimpleCommandMap;
++import net.minecraft.server.MinecraftServer;
++
+ @ConfigSerializable
+ @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
+ public class PandaSpigotConfig {
+@@ -68,6 +72,10 @@ public class PandaSpigotConfig {
+         } catch (Exception e) {
+             throw Throwables.propagate(e);
+         }
++		
++		SimpleCommandMap commandMap = MinecraftServer.getServer().server.getCommandMap();
++		KnockbackModificationCommand knockbackModificationCommand = new KnockbackModificationCommand("knockback");
++		commandMap.register(knockbackModificationCommand.getName(), "", knockbackModificationCommand);
+     }
+     
+     private static void initWorlds(ConfigurationNode node) throws Exception {

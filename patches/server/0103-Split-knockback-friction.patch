@@ -1,0 +1,40 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: necrozma <necrozma999@gmail.com>
+Date: Wed, 17 May 2023 14:46:15 -0600
+Subject: [PATCH] Split knockback friction
+
+
+diff --git a/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotWorldConfig.java b/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotWorldConfig.java
+index 360ed37b95fce68941c234615b465090b8ea7308..59c3ae11713eac2c35e25485965fec3d9a365dce 100644
+--- a/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotWorldConfig.java
++++ b/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotWorldConfig.java
+@@ -45,7 +45,8 @@ public class PandaSpigotWorldConfig {
+     
+     @ConfigSerializable
+     public static class KnockbackConfig {
+-        public double friction = 2.0;
++        public double frictionHorizontal = 2.0;
++        public double frictionVertical = 2.0;
+         public double horizontal = 0.4;
+         public double vertical = 0.4;
+         public double verticalLimit = 0.4000000059604645;
+diff --git a/src/main/java/net/minecraft/server/EntityLiving.java b/src/main/java/net/minecraft/server/EntityLiving.java
+index 94d8f2ffe938bd2d57d0297f9efc43ee55da3ba9..eb3f36f33c69c1bb0e91e271354f21267c08e4d6 100644
+--- a/src/main/java/net/minecraft/server/EntityLiving.java
++++ b/src/main/java/net/minecraft/server/EntityLiving.java
+@@ -901,10 +901,11 @@ public abstract class EntityLiving extends Entity {
+             com.hpfxd.pandaspigot.config.PandaSpigotWorldConfig.KnockbackConfig knockbackConfig = entity.world.pandaSpigotConfig.knockback;
+             double magnitude = MathHelper.sqrt(d0 * d0 + d1 * d1);
+     
+-            double friction = knockbackConfig.friction;
+-            this.motX /= friction;
+-            this.motY /= friction;
+-            this.motZ /= friction;
++            double frictionHorizontal = knockbackConfig.frictionHorizontal;
++            double frictionVertical = knockbackConfig.frictionVertical;
++            this.motX /= frictionHorizontal;
++            this.motY /= frictionVertical;
++            this.motZ /= frictionHorizontal;
+     
+             this.motX -= d0 / magnitude * knockbackConfig.horizontal;
+             this.motY += knockbackConfig.vertical;

@@ -1,0 +1,57 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: necrozma <necrozma999@gmail.com>
+Date: Wed, 17 May 2023 13:14:53 -0600
+Subject: [PATCH] Fix tracker offset
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+index 0b90b6f30ea09fb117281d5ddd2fc752d2c139b5..d67f464ac0ed469f9ba70f7ab97a8eece3d8064d 100644
+--- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
++++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+@@ -7,6 +7,7 @@ import java.util.List;
+ import java.util.Set;
+ import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.Logger;
++import java.lang.Math;
+ 
+ // CraftBukkit start
+ import org.bukkit.entity.Player;
+@@ -51,9 +52,9 @@ public class EntityTrackerEntry {
+         this.b = i;
+         this.c = j;
+         this.u = flag;
+-        this.xLoc = MathHelper.floor(entity.locX * 32.0D);
+-        this.yLoc = MathHelper.floor(entity.locY * 32.0D);
+-        this.zLoc = MathHelper.floor(entity.locZ * 32.0D);
++        this.xLoc = (int) Math.round(entity.locX * 32.0D);
++        this.yLoc = (int) Math.round(entity.locY * 32.0D);
++        this.zLoc = (int) Math.round(entity.locZ * 32.0D);
+         this.yRot = MathHelper.d(entity.yaw * 256.0F / 360.0F);
+         this.xRot = MathHelper.d(entity.pitch * 256.0F / 360.0F);
+         this.i = MathHelper.d(entity.getHeadRotation() * 256.0F / 360.0F);
+@@ -114,9 +115,9 @@ public class EntityTrackerEntry {
+ 
+             if (this.tracker.vehicle == null) {
+                 ++this.v;
+-                i = MathHelper.floor(this.tracker.locX * 32.0D);
+-                j = MathHelper.floor(this.tracker.locY * 32.0D);
+-                int k = MathHelper.floor(this.tracker.locZ * 32.0D);
++                i = (int) Math.round(this.tracker.locX * 32.0D);
++                j = (int) Math.round(this.tracker.locY * 32.0D);
++                int k = (int) Math.round(this.tracker.locZ * 32.0D);
+                 int l = MathHelper.d(this.tracker.yaw * 256.0F / 360.0F);
+                 int i1 = MathHelper.d(this.tracker.pitch * 256.0F / 360.0F);
+                 int j1 = i - this.xLoc;
+@@ -226,9 +227,9 @@ public class EntityTrackerEntry {
+                     this.xRot = j;
+                 }
+ 
+-                this.xLoc = MathHelper.floor(this.tracker.locX * 32.0D);
+-                this.yLoc = MathHelper.floor(this.tracker.locY * 32.0D);
+-                this.zLoc = MathHelper.floor(this.tracker.locZ * 32.0D);
++                this.xLoc = (int) Math.round(this.tracker.locX * 32.0D);
++                this.yLoc = (int) Math.round(this.tracker.locY * 32.0D);
++                this.zLoc = (int) Math.round(this.tracker.locZ * 32.0D);
+                 this.b();
+                 this.x = true;
+             }

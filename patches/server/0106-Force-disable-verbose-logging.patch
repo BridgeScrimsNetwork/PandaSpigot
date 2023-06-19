@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: necrozma <necrozma999@gmail.com>
+Date: Mon, 19 Jun 2023 11:10:43 -0600
+Subject: [PATCH] Force disable verbose logging
+
+
+diff --git a/src/main/java/org/github/paperspigot/PaperSpigotWorldConfig.java b/src/main/java/org/github/paperspigot/PaperSpigotWorldConfig.java
+index 67e56df017b98222e64fc46e97a2b104e6f0d69f..9ba9b898da26a42a291426a7261a68811e92a570 100644
+--- a/src/main/java/org/github/paperspigot/PaperSpigotWorldConfig.java
++++ b/src/main/java/org/github/paperspigot/PaperSpigotWorldConfig.java
+@@ -28,7 +28,7 @@ public class PaperSpigotWorldConfig
+ 
+     private void log(String s)
+     {
+-        if ( verbose )
++        if ( false )
+         {
+             Bukkit.getLogger().info( s );
+         }
+diff --git a/src/main/java/org/spigotmc/SpigotWorldConfig.java b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+index 8e86212aa5deae00c55cacc7207525df67a1868e..a90bf4d90f973f2fe187d4a0910e860adb322741 100644
+--- a/src/main/java/org/spigotmc/SpigotWorldConfig.java
++++ b/src/main/java/org/spigotmc/SpigotWorldConfig.java
+@@ -29,7 +29,7 @@ public class SpigotWorldConfig
+ 
+     private void log(String s)
+     {
+-        if ( verbose )
++        if ( false )
+         {
+             Bukkit.getLogger().info( s );
+         }

@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: necrozma <necrozma999@gmail.com>
+Date: Wed, 17 May 2023 14:45:03 -0600
+Subject: [PATCH] Print arrow damage
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityArrow.java b/src/main/java/net/minecraft/server/EntityArrow.java
+index 3035297d7ce223e6d1a4b219d9eea5c07ccad2db..adffdb4b46d08ba9d99a52f63c0907765bddb6b0 100644
+--- a/src/main/java/net/minecraft/server/EntityArrow.java
++++ b/src/main/java/net/minecraft/server/EntityArrow.java
+@@ -265,6 +265,14 @@ public class EntityArrow extends Entity implements IProjectile {
+ 
+                     // CraftBukkit start - Moved damage call
+                     if (movingobjectposition.entity.damageEntity(damagesource, (float) k)) {
++                        if (movingobjectposition.entity instanceof EntityHuman && this.shooter instanceof EntityPlayer) {
++                            EntityHuman h = (EntityHuman) movingobjectposition.entity;
++                            EntityPlayer p = (EntityPlayer) this.shooter;
++                            float hp = ((int) ((h.getHealth() + h.getAbsorptionHearts() + 0.05f) * 10)) / 10f;
++                            if (hp != 20.00f) {
++                                p.sendMessage(new ChatMessage("§b" + h.getName() + " §ehas §a" + hp + "§c❤", new Object[0]));	
++                            }
++                        }
+                     if (this.isBurning() && !(movingobjectposition.entity instanceof EntityEnderman) && (!(movingobjectposition.entity instanceof EntityPlayer) || !(this.shooter instanceof EntityPlayer) || this.world.pvpMode)) { // CraftBukkit - abide by pvp setting if destination is a player
+                         EntityCombustByEntityEvent combustEvent = new EntityCombustByEntityEvent(this.getBukkitEntity(), entity.getBukkitEntity(), 5);
+                         org.bukkit.Bukkit.getPluginManager().callEvent(combustEvent);
