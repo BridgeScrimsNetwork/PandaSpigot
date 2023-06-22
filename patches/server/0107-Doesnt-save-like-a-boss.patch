@@ -1,0 +1,44 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: necrozma <necrozma999@gmail.com>
+Date: Thu, 22 Jun 2023 10:40:13 -0600
+Subject: [PATCH] Doesnt save like a boss
+
+
+diff --git a/src/main/java/org/github/paperspigot/PaperSpigotConfig.java b/src/main/java/org/github/paperspigot/PaperSpigotConfig.java
+index b118ecd457df670f34623800264435d46a2b4c71..9a7c06ecf3b3e058f91a99db9cd746796e400648 100644
+--- a/src/main/java/org/github/paperspigot/PaperSpigotConfig.java
++++ b/src/main/java/org/github/paperspigot/PaperSpigotConfig.java
+@@ -92,14 +92,6 @@ public class PaperSpigotConfig
+                 }
+             }
+         }
+-
+-        try
+-        {
+-            config.save( CONFIG_FILE );
+-        } catch ( IOException ex )
+-        {
+-            Bukkit.getLogger().log( Level.SEVERE, "Could not save " + CONFIG_FILE, ex );
+-        }
+     }
+ 
+     private static void set(String path, Object val)
+diff --git a/src/main/java/org/spigotmc/SpigotConfig.java b/src/main/java/org/spigotmc/SpigotConfig.java
+index dfd1de256e15c800658e1ce8c76a587eeb310e9c..7768ff5916bfb119e88561a6f0348f77fa27d58a 100644
+--- a/src/main/java/org/spigotmc/SpigotConfig.java
++++ b/src/main/java/org/spigotmc/SpigotConfig.java
+@@ -122,14 +122,6 @@ public class SpigotConfig
+                 }
+             }
+         }
+-
+-        try
+-        {
+-            config.save( CONFIG_FILE );
+-        } catch ( IOException ex )
+-        {
+-            Bukkit.getLogger().log( Level.SEVERE, "Could not save " + CONFIG_FILE, ex );
+-        }
+     }
+ 
+     private static void set(String path, Object val)
