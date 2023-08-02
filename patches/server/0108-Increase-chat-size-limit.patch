@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: imkunet <kunettyi@gmail.com>
+Date: Wed, 2 Aug 2023 04:56:57 -0400
+Subject: [PATCH] Increase chat size limit
+
+
+diff --git a/src/main/java/net/minecraft/server/PacketPlayInChat.java b/src/main/java/net/minecraft/server/PacketPlayInChat.java
+index 18358b4324a7da15d932c11f19d657345da619af..3aab57ce4c32cbcf8e2e78a4647d6483e35c68ef 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayInChat.java
++++ b/src/main/java/net/minecraft/server/PacketPlayInChat.java
+@@ -9,15 +9,16 @@ public class PacketPlayInChat implements Packet<PacketListenerPlayIn> {
+     public PacketPlayInChat() {}
+ 
+     public PacketPlayInChat(String s) {
+-        if (s.length() > 100) {
+-            s = s.substring(0, 100);
++        // no idea why this is here since it should be unreachable
++        if (s.length() > 256) {
++            s = s.substring(0, 256);
+         }
+ 
+         this.a = s;
+     }
+ 
+     public void a(PacketDataSerializer packetdataserializer) throws IOException {
+-        this.a = packetdataserializer.c(100);
++        this.a = packetdataserializer.c(256);
+     }
+ 
+     public void b(PacketDataSerializer packetdataserializer) throws IOException {
