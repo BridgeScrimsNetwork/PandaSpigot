@@ -1,0 +1,55 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: necrozma <necrozma999@gmail.com>
+Date: Fri, 7 Jul 2023 09:18:03 -0600
+Subject: [PATCH] Affirmative eating
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityPlayer.java b/src/main/java/net/minecraft/server/EntityPlayer.java
+index 0a4acf1e7b78eaeeca2606dbc46cdc5d703b8fad..51669abcd5571b9f8c7850e1fa419c957824f013 100644
+--- a/src/main/java/net/minecraft/server/EntityPlayer.java
++++ b/src/main/java/net/minecraft/server/EntityPlayer.java
+@@ -49,6 +49,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
+     private int containerCounter;
+     public boolean g;
+     public int ping;
++    public int pingMin = Integer.MAX_VALUE;
+     public boolean viewingCredits;
+ 
+     // CraftBukkit start
+diff --git a/src/main/java/net/minecraft/server/ItemFood.java b/src/main/java/net/minecraft/server/ItemFood.java
+index 4a2ec5dceea6bd74e719e6cde8f79621ed1c89a1..f270e091235ca413ca85ad2c9486a2580f7279cd 100644
+--- a/src/main/java/net/minecraft/server/ItemFood.java
++++ b/src/main/java/net/minecraft/server/ItemFood.java
+@@ -50,7 +50,13 @@ public class ItemFood extends Item {
+ 
+     public ItemStack a(ItemStack itemstack, World world, EntityHuman entityhuman) {
+         if (entityhuman.j(this.k)) {
+-            entityhuman.a(itemstack, this.d(itemstack));
++            if (entityhuman instanceof EntityPlayer && ((EntityPlayer) entityhuman).pingMin != Integer.MAX_VALUE) {
++                int ticks = Math.max(24, 32 - (((EntityPlayer) entityhuman).pingMin / 50));
++                entityhuman.a(itemstack, ticks);
++            }
++            else {
++                entityhuman.a(itemstack, this.d(itemstack));
++            }
+         }
+ 
+         return itemstack;
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index 3a37e5cfe35adcd608ad36cf8047e94df86fbcf9..9dee66f54a6a4ee49c96abb453664a95e6f47bc8 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -1943,7 +1943,12 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
+         if (packetplayinkeepalive.a() == this.i) {
+             int i = (int) (this.d() - this.j);
+ 
+-            this.player.ping = (this.player.ping * 3 + i) / 4;
++            if (this.player.ping == 0) {
++                this.player.ping = i;
++            } else {
++                this.player.ping = (this.player.ping * 3 + i) / 4;
++                this.player.pingMin = Math.min(this.player.pingMin, i);
++            }
+         }
+ 
+     }
