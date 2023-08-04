@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: BuildTools <iceicebabyalter@gmail.com>
+Date: Thu, 3 Aug 2023 21:51:37 -0600
+Subject: [PATCH] remove onGround check in entitylivingentity
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+index 96c14bebc5f08e9d195b2451e4fd162c516b03f8..1eb8acbf387343e565e7f000cfa35d3cbb1d1c1e 100644
+--- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
++++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+@@ -141,7 +141,7 @@ public class EntityTrackerEntry {
+                     }
+                     // CraftBukkit end
+ 
+-                    if (j1 >= -128 && j1 < 128 && k1 >= -128 && k1 < 128 && l1 >= -128 && l1 < 128 && this.v <= 400 && !this.x && this.y == this.tracker.onGround) {
++                    if (j1 >= -128 && j1 < 128 && k1 >= -128 && k1 < 128 && l1 >= -128 && l1 < 128 && this.v <= 400 && !this.x) {
+                         if ((!flag || !flag1) && !(this.tracker instanceof EntityArrow)) {
+                             if (flag) {
+                                 object = new PacketPlayOutEntity.PacketPlayOutRelEntityMove(this.tracker.getId(), (byte) j1, (byte) k1, (byte) l1, this.tracker.onGround);
